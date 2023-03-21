@@ -43,6 +43,8 @@ namespace azure_functions
 
             //ensure id is unique
             data.id = Guid.NewGuid().ToString();
+            data.databaseName = "databaseName";
+            data.collectionName = "collectionName";
 
             var connectionString = System.Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION");
 
