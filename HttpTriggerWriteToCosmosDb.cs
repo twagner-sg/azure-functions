@@ -21,6 +21,9 @@ namespace azure_functions
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             /*
+             
+                http://localhost:7156/api/HttpTriggerWriteToCosmosDb
+
                 {
                     "databaseName": "databaseName",
                     "collectionName": "collectionName"
@@ -32,7 +35,7 @@ namespace azure_functions
 
             if (data == null)
             {
-                // if the following didn't come from the posted data, get it from settings
+                // for local env, allow a 'get'
                 data = new System.Dynamic.ExpandoObject();
                 data.databaseName = Environment.GetEnvironmentVariable("COSMOSDB_DATABASE_NAME");
                 data.collectionName = Environment.GetEnvironmentVariable("COSMOSDB_COLLECTION_NAME");
