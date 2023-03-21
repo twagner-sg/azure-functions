@@ -55,7 +55,7 @@ namespace azure_functions
                     var database = client.GetDatabase("databaseName");
                     var container = database.GetContainer("collectionName");
 
-                    var response = await container.CreateItemAsync(data, new PartitionKey(data.id));
+                    var response = await container.CreateItemAsync(data);
                 }
             }
             catch (Exception ex)
