@@ -19,6 +19,12 @@ namespace azure_functions
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
+            /*
+                {
+                    "name": "name goes HERE...."
+                }
+            */
+
             string name = req.Query["name"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
