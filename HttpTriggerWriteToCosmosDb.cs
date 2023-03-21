@@ -58,11 +58,10 @@ namespace azure_functions
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
+                data.errorMessage = ex.Message;
             }
-           
 
-            string responseMessage = $"{data.id}. This HTTP triggered function executed successfully.";
+            string responseMessage = JsonConvert.SerializeObject(data);
 
             return new OkObjectResult(responseMessage);
         }
