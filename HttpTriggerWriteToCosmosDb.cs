@@ -52,8 +52,8 @@ namespace azure_functions
             {
                 using (CosmosClient client = new CosmosClient(connectionString))
                 {
-                    var database = client.GetDatabase(data.databaseName);
-                    var container = database.GetContainer(data.collectionName);
+                    var database = client.GetDatabase("databaseName");
+                    var container = database.GetContainer("collectionName");
 
                     var response = await container.CreateItemAsync(data, new PartitionKey(data.id));
                 }
