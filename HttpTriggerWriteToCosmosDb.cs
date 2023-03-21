@@ -22,32 +22,28 @@ namespace azure_functions
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            /*
+                    {
+                      "databaseName": "databaseName",
+                      "collectionName": "collectionName"
+                    }
+            */
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string databaseName = "databaseName";
-            string collectionName = "collectionName";
-
-            dynamic foo = new JObject();
-            foo.id = Guid.NewGuid();
-            foo.name = name;
+            data.id = Guid.NewGuid();
 
             var connectionString = System.Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION");
 
             using (CosmosClient client = new CosmosClient(connectionString))
             {
-                var database = client.GetDatabase(databaseName);
-                var container = database.GetContainer(collectionName);
+                var database = client.GetDatabase(data.databaseName);
+                var container = database.GetContainer(data.collectionName);
 
-                var response = await container.CreateItemAsync(foo, new PartitionKey(foo.id));
+                var response = await container.CreateItemAsync(data, new PartitionKey(data.id));
             }
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            string responseMessage = $"{data.id}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
         }
