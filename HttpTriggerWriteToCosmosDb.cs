@@ -13,6 +13,7 @@ namespace azure_functions
 {
     public class CosmosDbEntity
     {
+        public string pk { get; set; }
         public string id { get; set; }
         public string databaseName { get; set; }
         public string collectionName { get; set; }
@@ -45,7 +46,7 @@ namespace azure_functions
             var data = JsonConvert.DeserializeObject<CosmosDbEntity>(requestBody);
 
             data.id = data?.id ?? Guid.NewGuid().ToString();
-
+            data.pk = data?.pk ?? Guid.NewGuid().ToString();
 
             var connectionString = System.Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION");
 
