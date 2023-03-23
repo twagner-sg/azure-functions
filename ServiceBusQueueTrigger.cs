@@ -8,7 +8,7 @@ namespace azure_functions
     public static class ServiceBusQueueTrigger
     {
         [FunctionName("ServiceBusQueueTrigger")]
-        public static void Run([ServiceBusTrigger("queue", Connection = "SERVICEBUS_CONNECTION")] string myQueueItem, ILogger log)
+        public static void Run([ServiceBusTrigger("%SERVICEBUS_QUEUE_NAME%", Connection = "SERVICEBUS_CONNECTION")] string myQueueItem, ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
         }
