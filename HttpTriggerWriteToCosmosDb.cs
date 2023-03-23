@@ -11,6 +11,14 @@ using System.Threading.Tasks;
 
 namespace azure_functions
 {
+    public class CosmosDbEntity
+    {
+        public string id { get; set; }
+        public string databaseName { get; set; }
+        public string collectionName { get; set; }
+        public string errorMessage { get; set; }
+    }
+
     public static class HttpTriggerWriteToCosmosDb
     {
         [FunctionName("HttpTriggerWriteToCosmosDb")]
@@ -25,26 +33,18 @@ namespace azure_functions
                 http://localhost:7156/api/HttpTriggerWriteToCosmosDb
 
                 {
+                    "id": "uniqueValue",
                     "databaseName": "databaseName",
-                    "collectionName": "collectionName"
+                    "collectionName": "collectionName",
+                    "source": "localhost-postman"
                 }
             */
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            var data = JsonConvert.DeserializeObject<CosmosDbEntity>(requestBody);
 
-            if (data == null)
-            {
-                // for local env, allow a 'get'
-                data = new System.Dynamic.ExpandoObject();
-                data.databaseName = Environment.GetEnvironmentVariable("COSMOSDB_DATABASE_NAME");
-                data.collectionName = Environment.GetEnvironmentVariable("COSMOSDB_COLLECTION_NAME");
-            }
+            data.id = data?.id ?? Guid.NewGuid().ToString();
 
-            //ensure id is unique
-            data.id = Guid.NewGuid().ToString();
-            data.databaseName = "databaseName";
-            data.collectionName = "collectionName";
 
             var connectionString = System.Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION");
 
@@ -52,8 +52,8 @@ namespace azure_functions
             {
                 using (CosmosClient client = new CosmosClient(connectionString))
                 {
-                    var database = client.GetDatabase("databaseName");
-                    var container = database.GetContainer("collectionName");
+                    var database = client.GetDatabase(data.databaseName);
+                    var container = database.GetContainer(data.collectionName);
 
                     var response = await container.CreateItemAsync(data);
                 }
