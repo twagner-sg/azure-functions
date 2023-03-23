@@ -16,6 +16,7 @@ namespace azure_functions
         public string id { get; set; }
         public string databaseName { get; set; }
         public string collectionName { get; set; }
+        public string message { get; set; }
         public string errorMessage { get; set; }
     }
 
